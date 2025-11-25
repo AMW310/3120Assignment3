@@ -1,0 +1,1 @@
+module.exports={"URI":"mongodb+srv://alexanderwaiganjo_db_user:1jchRa7IGgauEiRM@cluster0.1dxauiu.mongodb.net/StudentsRecord"}

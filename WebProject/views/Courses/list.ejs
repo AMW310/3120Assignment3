@@ -1,0 +1,30 @@
+<%- include ../partials/header.ejs%>
+<%- include ../partials/main_nav.ejs%>
+<!--Main content for displaying my database-->
+<main class="container">
+    <div class="row">
+        <div class="offset-md-1 col-md-10">
+            <h1><%= title %></h1>
+            <br>
+            <table class="table table-bordered table-striped table-hover">
+                <!--Header Row-->
+                <tr class="d-flex">
+                    <th class="text-center col-2">Name</th>
+                    <th class="text-center col-1">Age</th>
+                    <th class="text-center col-4">Major</th>
+                    <th class="text-center col-1">GPA</th>
+                </tr>
+                <!--for/while loop-->
+                <% for(let count=0; count<CourseList.length;count++) { %>
+                    <tr class="d-flex">
+                        <td class="text-center col-2"><%= CourseList[count].name %></td>
+                        <td class="text-center col-1"><%= CourseList[count].age %></td>
+                        <td class="text-center col-4"><%= CourseList[count].major %></td>
+                        <td class="text-center col-1"><%= CourseList[count].gpa %></td>
+                    </tr>
+                <% } %>
+            </table>
+
+        </div>
+    </div>
+</main>
