@@ -9,21 +9,22 @@ let Course = require('../model/course');
 // delete --> Delete the data
 // CRUD --> Create, Read, Update & Delete
 
-// Get route for the read course list - Read Operation
+// Get route for the read student list - Read Operation
 router.get('/',async(req,res,next)=>{
     try
     {
-        const CourseList = await Course.find();
-        //console.log(CourseList);
+        const StudentList = await Course.find();
         res.render('Courses/list',{
-            title:'Courses',
-            CourseList:CourseList
+            title:'Student List',
+            StudentList:StudentList,
+            displayName: req.user?req.user.displayName:""
         })
     }
     catch(err)
     {
         console.error(err);
-        res.render('Courses/list',{
+        res.render('Courses/list',
+        {
             error:'Error on server'
         })
     }
@@ -33,14 +34,15 @@ router.get('/',async(req,res,next)=>{
 router.get('/add',async(req,res,next)=>{
     try{
         res.render('Courses/add',{
-            title:'Add a Student'
+            title:'Add a Student',
+            displayName: req.user?req.user.displayName:""
         })
     }
     catch(err)
     {
         console.error(err);
-        res.render('Courses/add',{
-            title:'Courses',
+        res.render('Courses/add',
+        {
             error:'Error on server'
         })
     }
@@ -49,35 +51,78 @@ router.get('/add',async(req,res,next)=>{
 router.post('/add',async(req,res,next)=>{
     try
     {
-        let newCourse = Course({
+        let newStudent = Course({
             "name":req.body.name,
             "age":req.body.age,
             "major":req.body.major,
             "gpa":req.body.gpa
         });
-        Course.create(newCourse).then(()=>{
+        Course.create(newStudent).then(()=>{
             res.redirect('/list')
         })
     }
     catch(err)
     {
         console.error(err);
-        res.render('Courses/add',{
-            title:'Courses',
+        res.render('Courses/add',
+        {
             error:'Error on server'
         })
     }
 })
 // Get route for displaying the Edit Page - Update Operation
 router.get('/edit/:id',async(req,res,next)=>{
-
+    try
+    {
+        const id = req.params.id;
+        const studentToEdit = await Course.findById(id);
+        res.render("Courses/edit",
+            {
+                title: 'Edit Student',
+                Course: studentToEdit,
+                displayName: req.user?req.user.displayName:""
+            }
+        )
+    }
+    catch(err)
+    {
+        console.log(err);
+        next(err);
+    }
 })
 // Post route for processing the Edit Page - Update Operation
 router.post('/edit/:id',async(req,res,next)=>{
-
+    try{
+        let id = req.params.id;
+        let updateCourse = Course({
+            "_id":id,
+            "name":req.body.name,
+            "age":req.body.age,
+            "major":req.body.major,
+            "gpa":req.body.gpa
+        })
+        Course.findByIdAndUpdate(id,updateCourse).then(()=>{
+            res.redirect("/list")
+        })
+    }
+    catch(err)
+    {
+        console.log(err);
+        next(err);
+    }
 })
 // Get route for performing delete operation - Delete Operation
 router.get('/delete/:id',async(req,res,next)=>{
-
+    try{
+        let id = req.params.id;
+        Course.deleteOne({_id:id}).then(()=>{
+            res.redirect("/list")
+        })
+    }
+    catch(err)
+    {
+        console.log(err);
+        next(err);
+    }
 })
 module.exports = router;

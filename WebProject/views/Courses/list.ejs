@@ -5,26 +5,40 @@
     <div class="row">
         <div class="offset-md-1 col-md-10">
             <h1><%= title %></h1>
-            <br>
-            <table class="table table-bordered table-striped table-hover">
+                <a href="/list/add" class="btn btn-primary" role="button">
+                <i class="fas fa-plus-circle"></i> Add a Student
+            </a>
+            <table class="table table-bordered table-striped table-hover">  
                 <!--Header Row-->
-                <tr class="d-flex">
+                <thead class="table-primary"> <!-- changes header color -->
+                <tr>
                     <th class="text-center col-2">Name</th>
                     <th class="text-center col-1">Age</th>
                     <th class="text-center col-4">Major</th>
                     <th class="text-center col-1">GPA</th>
                 </tr>
                 <!--for/while loop-->
-                <% for(let count=0; count<CourseList.length;count++) { %>
-                    <tr class="d-flex">
-                        <td class="text-center col-2"><%= CourseList[count].name %></td>
-                        <td class="text-center col-1"><%= CourseList[count].age %></td>
-                        <td class="text-center col-4"><%= CourseList[count].major %></td>
-                        <td class="text-center col-1"><%= CourseList[count].gpa %></td>
+                <% for(let count=0; count<StudentList.length;count++) { %>
+                    <tr class="<%= count % 2 === 0 ? 'table-info' : 'table-success' %>"> <!--alternating row color-->
+                        <td class="text-center col-2"><%= StudentList[count].name %></td>
+                        <td class="text-center col-1"><%= StudentList[count].age %></td>
+                        <td class="text-center col-4"><%= StudentList[count].major %></td>
+                        <td class="text-center col-1"><%= StudentList[count].gpa %></td>
+                        <td class="text-center col-1">
+                        <a href="/list/edit/<%= StudentList[count]._id%>" 
+                            class="btn btn-primary btn-sm">
+                            <i class="fas fa-pencil-alt"></i> Edit
+                        </a></td>
+                        <td class="text-center col-1">
+                            <a href="/list/delete/<%= StudentList[count]._id%>" 
+                            class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete <%= StudentList[count].name %>?')">
+                            <i class="fas fa-trash-alt"></i> Delete</a></td>
                     </tr>
                 <% } %>
             </table>
-
         </div>
     </div>
 </main>
+<br>
+<br>
+<%- include ../partials/footer.ejs%>
