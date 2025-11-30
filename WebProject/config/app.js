@@ -5,17 +5,46 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 let mongoose = require('mongoose');
 let DB = require('./db');
+let session = require('express-session');
+let passport = require('passport');
+let passportLocal = require("passport-local");
+let localStrategy = passportLocal.Strategy;
+let flash = require('connect-flash');
+let cors = require('cors');
 var indexRouter = require('../routes/index');
 var usersRouter = require('../routes/users');
 let coursesRouter = require('../routes/course')
 var app = express();
+let userModel = require('../model/user')
+let User = userModel.User;
 
 mongoose.connect(DB.URI);
 let mongoDB = mongoose.connection;
-mongoDB.on('error',console.error.bind(console,'Connection error'));
+mongoDB.on('error',console.error.bind('console','Connection error'));
 mongoDB.once('open', ()=>{
   console.log('Connected to the MongoDB');
 });
+
+app.use(session({
+  secret:"Somesecret",
+  saveUninitialized:false,
+  resave:false
+}))
+
+app.use(flash());
+
+console.log("User.createStrategy:", User.createStrategy);
+passport.use(User.createStrategy());
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+console.log("User.createStrategy:", User.createStrategy ? "Exists" : "Missing");
+console.log("User:", User);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 // view engine setup
 app.set('views', path.join(__dirname, '../views'));

@@ -2,7 +2,14 @@ let express = require('express');
 let router = express.Router();
 let mongoose = require('mongoose');
 let Course = require('../model/course');
-
+function requireAuth(req,res,next)
+{
+    if(!req.isAuthenticated())
+    {
+        return res.redirect('/login')
+    }
+    next();
+}
 // get --> Extract & read something
 // post --> post something
 // put --> Edit/Update some data
